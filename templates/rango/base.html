@@ -6,11 +6,13 @@
 
 <head lang="en">
 
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <meta charset="UTF-8" />
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -26,34 +28,56 @@
 </head>
 
 <body>
-    <div>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark p-0">
+            <a class="navbar-brand p-2" href="{% url 'rango:index' %}">Rango</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        {% block body_block %}
-        {% endblock %}
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:index' %}">Home</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:register' %}">Sign Up</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:login' %}">Login</a></li>
+                    {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:about' %}">About</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:logout' %}">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
 
-    </div>
-    
-    <div>
-        {% block sidebar_block %}
-            {% get_category_list category %}
-        {% endblock %}
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <div>
+                        {% block sidebar_block %}
+                        {% get_category_list category %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </nav>
+            <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">
+                {% block body_block %}
+                {% endblock %}
+
+                <footer>
+                    <p class="float-right"><a href="#">Back to top</a></p>
+                    <p>&copy; 2021 Flying Circus &middot; Carl Mellander - 2038584, Liam Fotheringham - 2595981, Reema Boualayan - 2592274</p>
+                </footer>
+            </main>
+        </div>
     </div>
 
-    <hr />
-    <div>
-        <ul>
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'rango:restricted' %}">Restricted Page</a></li>
-            <li><a href="{% url 'rango:logout' %}">Logout</a></li>
-            <li><a href="{% url 'rango:add_category' %}">Add a New Category</a></li>
-        {% else %}
-            <li><a href="{% url 'rango:register' %}">Sign Up</a></li>
-            <li><a href="{% url 'rango:login' %}">Login</a></li>
-        {% endif %}
-            <li><a href="{% url 'rango:about' %}">About</a></li>
-            <li><a href="{% url 'rango:index' %}">Index</a></li>
-        </ul>
-    </div>
 </body>
 
 </html>
