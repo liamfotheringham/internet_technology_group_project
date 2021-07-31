@@ -157,10 +157,6 @@ def user_logout(request):
     logout(request)
     return redirect(reverse('rango:index'))
 
-@login_required
-def restricted(request):
-    return render(request, 'rango/restricted.html')
-
 def get_server_side_cookie(request, cookie, default_val=None):
 	val = request.session.get(cookie)
 	if not val:
