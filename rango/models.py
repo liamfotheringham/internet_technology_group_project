@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.template.defaultfilters import slugify
+from datetime import datetime
 
 class Category(models.Model):
 
@@ -43,3 +44,9 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Comment(models.Model):
+    category = models.ForeignKey(Category, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    text = models.TextField()
+    date_added = models.DateTimeField(default=datetime.now, blank=True)
