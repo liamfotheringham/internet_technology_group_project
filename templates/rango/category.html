@@ -27,12 +27,36 @@
         {% endif %}
 
         <h2>Comments</h2>
-        <div class="media">
+        {% if user.is_authenticated %}
+            <form id="comment_form" method="POST" action="{% url 'rango:show_category' category.slug %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <input class="btn btn-primary" type="submit" name="submit" value="Comment">
+            </form>
+            <br />
+        {% else %}
+            <p>You must register to leave a comment, do so <a href="{% url 'rango:register' %}">here</a>
+        {% endif %}
+
+        <div>
             {% if comments %}
                 {% for comment in comments %}
-                    <div class="media-body">
-                        <h4>{{ comment.user }}</h4>
-                        <p>{{ comment.text }}</p>
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-2">
+                                {% if comment.user.userprofile.picture %}
+                                    <img class="img-fluid rounded-start" src="{{ MEDIA_URL }}{{comment.user.userprofile.picture}}" alt="{{comment.user.username}}'s profile picture">
+                                {% else %}
+                                    <img class="img-fluid rounded-start" src="{% static 'images/default_user.jpg' %}" alt="{{comment.user.username}}'s profile picture">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-10">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ comment.user }}</h4>
+                                    <p class="card-text">{{ comment.text }}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
             {% else %}

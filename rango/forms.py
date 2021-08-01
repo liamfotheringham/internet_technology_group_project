@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from rango.models import Page, Category, UserProfile
+from rango.models import Page, Category, UserProfile, Comment
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(max_length = Category.NAME_MAX_LENGTH, help_text="Please enter the category name.")
@@ -43,3 +43,16 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'picture',)
+
+class CommentForm(forms.ModelForm):
+    text = forms.CharField(widget = forms.Textarea(
+    attrs={
+        'class':'form-control',
+        'placeholder':'Add a Comment...',
+        'cols':25,
+        'rows':3
+    }))
+    
+    class Meta:
+        model = Comment
+        fields = ['text']
