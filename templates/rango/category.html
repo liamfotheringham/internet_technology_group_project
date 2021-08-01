@@ -45,9 +45,9 @@
                         <div class="row g-0">
                             <div class="col-md-2">
                                 {% if comment.user.userprofile.picture %}
-                                    <img class="img-fluid rounded-start" src="{{ MEDIA_URL }}{{comment.user.userprofile.picture}}" alt="{{comment.user.username}}'s profile picture">
+                                    <img class="rounded comment-pic" src="{{ MEDIA_URL }}{{comment.user.userprofile.picture}}" alt="{{comment.user.username}}'s profile picture">
                                 {% else %}
-                                    <img class="img-fluid rounded-start" src="{% static 'images/default_user.jpg' %}" alt="{{comment.user.username}}'s profile picture">
+                                    <img class="rounded comment-pic" src="{% static 'images/default_user.jpg' %}" alt="{{comment.user.username}}'s profile picture">
                                 {% endif %}
                             </div>
                             <div class="col-md-10">
