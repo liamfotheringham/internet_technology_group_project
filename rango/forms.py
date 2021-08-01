@@ -51,7 +51,7 @@ class CommentForm(forms.ModelForm):
         'placeholder':'Add a Comment...',
         'cols':25,
         'rows':3
-    }))
+    }), label = False)
     
     class Meta:
         model = Comment
