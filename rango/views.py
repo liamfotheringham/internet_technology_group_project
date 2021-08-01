@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
-from rango.models import Category, Page
+from rango.models import Category, Page, Comment
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
 from datetime import datetime
@@ -44,10 +44,12 @@ def show_category(request, category_name_slug):
         
         context_dict['pages'] = pages
         context_dict['category'] = category
+        context_dict['comments'] = Comment.objects.filter(category = category).order_by('-date_added')
 
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
+        context_dict['comments'] = None
 
     return render(request, 'rango/category.html', context=context_dict)
 
