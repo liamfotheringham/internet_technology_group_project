@@ -4,9 +4,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.views import View
 
-from rango.models import Category, Page, Comment
+from rango.models import Category, Page, Comment, UserProfile
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm, CommentForm
 
 from datetime import datetime
@@ -194,3 +197,48 @@ def visitor_cookie_handler(request): #obtain number of visits to the site
         request.session['last_visit'] = last_visit_cookie #set last visit cookie
 
     request.session['visits'] = visits #update/set visits cookie
+
+class ProfileView(View):
+    def get_user_details(self, username):
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
+
+        user_profile = UserProfile.objects.get_or_create(user=user)[0]
+        form = UserProfileForm({'website':user_profile.website,
+                                'picture':user_profile.picture})
+
+        return(user, user_profile, form)
+
+    def get(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except TypeError:
+            return redirect(reverse('rango:index'))
+
+        context_dict = {'user_profile':user_profile,
+                        'selected_user':user,
+                        'form':form}
+        
+        return render(request, 'rango/profile.html', context_dict)
+    
+    def post(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except:
+            return redirect(reverse('rango:index'))
+
+        form = userProfileForm(request.POST, request.FILES, instance=user_profile)
+
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('rango:profile', user.username)
+        else:
+            print(form.errors)
+
+        context_dict = {'user_profile':user_profile,
+                        'selected_user':user,
+                        'form':form}
+
+        return render(request, 'rango/profile.html', context_dict)

@@ -1,0 +1,68 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    {{ selected_user.username }}
+{% endblock title_block %}
+
+{% block body_block %}
+    <div class="jumbotron p-4">
+        <div class="container">
+            <h1 class="jumbotron-heading">{{selected_user.username}}'s Profile</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                {% if user_profile.picture %}
+                    <img class="img-fluid" src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="{{selected_user.username}}'s Profile Picture">
+                {% else %}
+                    <img class="img-fluid" src="{% static 'images/default_user.jpg' %}" alt="{{selected_user.username}}'s Profile Picture">
+                {% endif %}
+
+                {% if selected_user == user %}
+                    <form action="." method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{form.as_p}}
+
+                        <input type="submit" value="Update">
+                    </form>
+                {% endif %}
+                <br />
+                <br />
+                <strong>Website: </strong><a href="{{ user_profile.website }}">{{ user_profile.website }}</a>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Liked Categories</h5>
+                    </div>
+                    <ul class="list-group list-group-flush overflow-auto">
+                        <li class="list-group-item"><a href="#">Python</a></li>
+                        <li class="list-group-item"><a href="#">Django</a></li>
+                        <li class="list-group-item"><a href="#">Web Frameworks</a></li>
+                        <li class="list-group-item"><a href="#">NodeJS</a></li>
+                        <li class="list-group-item"><a href="#">C++</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="custom-inline"><h5>Friends</h5> <a href="#">See All Friends</a></div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href="#">John Doe</a></li>
+                        <li class="list-group-item"><a href="#">Suzy Sweet</a></li>
+                        <li class="list-group-item"><a href="#">Jane Doe</a></li>
+                        <li class="list-group-item"><a href="#">Alice Sender</a></li>
+                        <li class="list-group-item"><a href="#">Bob Reciever</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+{% endblock body_block %}

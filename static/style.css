@@ -1,0 +1,5 @@
+.custom-inline{
+    display: flex;
+    justify-content: space-between;
+    display: inline;
+}
