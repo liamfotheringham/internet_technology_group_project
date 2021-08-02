@@ -12,3 +12,8 @@
 .right {
     float: right;
 }
+
+#google_login {
+    color: white;
+    text-decoration: none;
+}
