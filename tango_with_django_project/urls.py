@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+from django.views.generic import TemplateView
 
 from rango import views
 
@@ -23,7 +24,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', TemplateView.as_view(template_name="social_app/index.html")),
     path('', views.index, name='index'),
     path('rango/', include('rango.urls')), #maps any URLs starting with rango/ to be handled by rango
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
