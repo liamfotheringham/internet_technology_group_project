@@ -7,8 +7,11 @@
 
 {% block body_block %}
     <div class="jumbotron p-4">
-        <div class="container">
+        <div class="container custom-inline">
             <h1 class="jumbotron-heading">{{selected_user.username}}'s Profile</h1>
+            {% if request.user.is_authenticated and selected_user != user %}
+                <input class="btn btn-primary" type="submit" value="Add/Remove">
+            {% endif %}
         </div>
     </div>
     <div class="container">
@@ -19,18 +22,18 @@
                 {% else %}
                     <img class="img-fluid" src="{% static 'images/default_user.jpg' %}" alt="{{selected_user.username}}'s Profile Picture">
                 {% endif %}
-
+                <br />
+                <br />
                 {% if selected_user == user %}
                     <form action="." method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{form.as_p}}
 
-                        <input type="submit" value="Update">
+                        <input class="btn btn-primary" type="submit" value="Update">
                     </form>
+                {% else %}
+                    <strong>Website: </strong><a href="{{ user_profile.website }}">{{ user_profile.website }}</a>
                 {% endif %}
-                <br />
-                <br />
-                <strong>Website: </strong><a href="{{ user_profile.website }}">{{ user_profile.website }}</a>
 
             </div>
             <div class="col-md-4">
@@ -51,7 +54,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <div class="custom-inline"><h5>Friends</h5> <a href="#">See All Friends</a></div>
+                        <div class="custom-inline"><h5>Friends</h5><a href="#">See All Friends</a></div>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><a href="#">John Doe</a></li>

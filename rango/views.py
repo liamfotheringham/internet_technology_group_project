@@ -229,7 +229,7 @@ class ProfileView(View):
         except:
             return redirect(reverse('rango:index'))
 
-        form = userProfileForm(request.POST, request.FILES, instance=user_profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
 
         if form.is_valid():
             form.save(commit=True)
