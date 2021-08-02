@@ -45,7 +45,7 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'rango:index' %}">Home</a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'rango:profile' user %}">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a></li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:register' %}">Sign Up</a></li>
