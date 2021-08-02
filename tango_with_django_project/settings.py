@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rango',
     'django.contrib.sites',
-    'social_app',
 
     'allauth',
     'allauth.account',
@@ -144,17 +143,18 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 1
+SITE_ID = 2
 LOGIN_REDIRECT_URL ='/'
 
 # email scope for successful login
 
 SOCIALACCOUNT_PROVIDERS = {
     'google' : {
-        'SCOPE' : [
-            'profile', 'email',
+        'SCOPE': [
+            'profile', 
+            'email',
         ],
-        'AUTH_PARAMS' : {
+        'AUTH_PARAMS': {
             'access_type': 'online',
         }
     }

@@ -1,5 +1,6 @@
 {% extends 'rango/base.html' %}
 {% load staticfiles %}
+{% load socialaccount %}
 
 {% block title_block %}
     Login
@@ -15,6 +16,10 @@
         <br />
         <input type="submit" value="submit" />
     </form>
-    <a href="{% provider_login_url 'google %}">Login with Google</a>
+    <br />
+    <h5>Or</h5>
+    <br />
+    <a href="{% provider_login_url "google" %}">Login with Google</a>
+    <br />
 {% endblock body_block %}
 
