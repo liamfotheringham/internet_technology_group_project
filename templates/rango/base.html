@@ -13,7 +13,7 @@
     
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -35,7 +35,10 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand p-2" href="{% url 'rango:index' %}">Rango</a>
+                <a class="navbar-brand p-2" href="{% url 'rango:index' %}">Rango
+                    <img src="/static/images/favicon.ico" width="25" height="25">
+                </a>
+                
                 <button class="navbar-toggler bg-dark" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -66,7 +69,8 @@
                 <div class="sidebar-sticky">
                     <div>
                         {% block sidebar_block %}
-                        {% get_category_list category %}
+                            <strong>Categories</strong>
+                            {% get_category_list category %}
                         {% endblock %}
                     </div>
                 </div>
@@ -77,7 +81,7 @@
 
                 <footer>
                     <p class="float-right"><a href="#">Back to top</a></p>
-                    <p>&copy; 2021 Flying Circus &middot; Carl Mellander - 2038584, Liam Fotheringham - 2595981, Reema
+                    <p>&copy; 2021 The Flying Circus &middot; Carl Mellander - 2038584, Liam Fotheringham - 2595981, Reema
                         Boualayan - 2592274</p>
                 </footer>
             </main>

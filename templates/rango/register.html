@@ -2,24 +2,44 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Register
+Register
 {% endblock title_block %}
 
 {% block body_block %}
-    <h1>Register for Rango</h1>
-    {% if registered %}
-        Rango says: <strong>thank you for registering!</strong>
-        <a href="{% url 'rango:index' %}">Return to the homepage.</a>
-    {% else %}
-        Rango says: <strong>register here!</strong>
-        <form id="user_form" method="POST" action="{% url 'rango:register' %}" enctype="multipart/form-data">
-        
-            {% csrf_token %}
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
+<h1>Register</h1>
+{% if registered %}
+Rango says: <strong>thank you for registering!</strong>
+<a href="{% url 'rango:index' %}">Return to the homepage.</a>
+{% else %}
+<form id="user_form" method="POST" action="{% url 'rango:register' %}" enctype="multipart/form-data">
 
-            <input type="submit" name="submit" value="Register" />
+    {% csrf_token %}
+    {{ user_form.name_of_field }}
+    <div class="form-floating">
+        <input type="username" class="form-control" id="floatingInput" placeholder="Username">
+        <label for="floatingInput">Username</label>
+    </div>
+    <div class="form-floating">
+        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <label for="floatingPassword">Password</label>
+    </div>
+    {{ profile_form.name_of_field }}
+    <div class="form-floating">
+        <input type="website" class="form-control" id="floatingInput" placeholder="www.example.com">
+        <label for="floatingInput">Website</label><br />
+    </div>
 
-        </form>
-    {% endif %}
+    <label class="form-label" for="customFile">Choose image</label>
+    <input type="file" class="form-control" id="customFile" /><br />
+
+
+    <input class="btn btn-primary" type="submit" name="submit" value="Register" />
+
+
+</form>
+{% endif %}
 {% endblock body_block %}

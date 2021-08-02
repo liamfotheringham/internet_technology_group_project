@@ -1,0 +1,14 @@
+.about {
+    overflow: hidden;
+    column-count: 2;
+    column-gap: 50px;
+    column-rule-style: solid;
+    column-rule-width: 1px;
+    column-width: auto;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
