@@ -45,7 +45,7 @@ class UserProfileForm(forms.ModelForm):
         fields = ('picture', 'website',)
 
 class CommentForm(forms.ModelForm):
-    text = forms.CharField(widget = forms.Textarea(
+    text = forms.CharField(label='',widget = forms.Textarea(
     attrs={
         'class':'form-control',
         'placeholder':'Add a Comment...',
