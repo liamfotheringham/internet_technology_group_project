@@ -6,15 +6,18 @@ Homepage
 {% endblock title_block %}
 
 {% block body_block %}
-
-<h1>Welcome to Rango
-    {% if user.is_authenticated %}
-    <td class="text-capitalize">{{ user.username }}!</td><br />
-    {% else %}
-    partner! <br />
-    {% endif %}
-</h1>
-<strong>A social link aggregation website!</strong>
+<div class="jumbotron p-4">
+    <div class="container">
+        <h1>Welcome to Rango
+            {% if user.is_authenticated %}
+            <td class="text-capitalize">{{ user.username }}!</td><br />
+            {% else %}
+            partner! <br />
+            {% endif %}
+        </h1>
+        <strong>A social link aggregation website!</strong>
+	</div>
+</div>
 <br />
 <br />
 <div class="container">

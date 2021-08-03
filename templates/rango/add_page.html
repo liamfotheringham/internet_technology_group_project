@@ -6,8 +6,14 @@
 {% endblock title_block %}
 
 {% block body_block %}
-    <h1>{{category.name}} - Add a Page</h1>
-    <div>
+<div class="jumbotron p-4">
+    <div class="container custom-inline">
+        <h1>{{category.name}} - Add a Page</h1>
+	</div>
+</div>
+
+<div class="container">
+    <div class="row">
         <form id="add_page_form" method="POST" action="{% url 'rango:add_page' category.slug %}">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
@@ -27,7 +33,10 @@
                 </div><br />
 
             {% endfor %}
-            <input class="btn btn-primary" type="submit" name="submit" value="Create Page" />
+            <input class="btn btn-primary" type="submit" name="submit" value="Submit" />
         </form>
-    </div>
+	</div>
+</div>
+    
+    
 {% endblock %}
