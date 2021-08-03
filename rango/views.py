@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.views import View
 
-from rango.models import Category, Page, Comment, UserProfile
+from rango.models import Category, Page, Comment, UserProfile, Friend
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm, CommentForm
 
 from datetime import datetime
@@ -214,18 +214,34 @@ class ProfileView(View):
     def get(self, request, username):
         try:
             (user, user_profile, form) = self.get_user_details(username)
+
         except TypeError:
             return redirect(reverse('rango:index'))
 
+        friends = get_five_friends(user_profile)
+
+        all_session_friends = get_all_friends(request.user.userprofile)
+
+        print(user_profile)
+        print(all_session_friends)
+
+        if(user_profile in all_session_friends):
+            is_friend = True
+        else:
+            is_friend = False
+
         context_dict = {'user_profile':user_profile,
                         'selected_user':user,
-                        'form':form}
+                        'form':form,
+                        'friends':friends,
+                        'is_friend':is_friend}
         
         return render(request, 'rango/profile.html', context_dict)
     
     def post(self, request, username):
         try:
             (user, user_profile, form) = self.get_user_details(username)
+
         except:
             return redirect(reverse('rango:index'))
 
@@ -237,8 +253,27 @@ class ProfileView(View):
         else:
             print(form.errors)
 
+        friends = get_five_friends(user_profile)
+
         context_dict = {'user_profile':user_profile,
                         'selected_user':user,
-                        'form':form}
+                        'form':form,
+                        'friends':friends}
 
         return render(request, 'rango/profile.html', context_dict)
+
+def get_five_friends(user_profile):
+    try:
+        friend = Friend.objects.get(user_profile=user_profile)
+        return friend.friends.all()[:5]
+        
+    except Friend.DoesNotExist:
+        return None
+
+def get_all_friends(user_profile):
+    try:
+        friend = Friend.objects.get(user_profile=user_profile)
+        return friend.friends.all()
+        
+    except Friend.DoesNotExist:
+        return None

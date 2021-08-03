@@ -10,10 +10,15 @@
         <div class="container custom-inline">
             <h1 class="jumbotron-heading">{{selected_user.username}}'s Profile</h1>
             {% if request.user.is_authenticated and selected_user != user %}
-                <input class="btn btn-primary" type="submit" value="Add/Remove">
+                {% if is_friend == True %}
+                    <input class="btn btn-primary" type="submit" value="Remove">
+                {% else %}
+                    <input class="btn btn-primary" type="submit" value="Add">
+                {% endif %}
             {% endif %}
         </div>
     </div>
+    
     <div class="container">
         <div class="row">
             <div class="col-md-4">
@@ -57,11 +62,13 @@
                         <div class="custom-inline"><h5>Friends</h5><a href="#">See All Friends</a></div>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="#">John Doe</a></li>
-                        <li class="list-group-item"><a href="#">Suzy Sweet</a></li>
-                        <li class="list-group-item"><a href="#">Jane Doe</a></li>
-                        <li class="list-group-item"><a href="#">Alice Sender</a></li>
-                        <li class="list-group-item"><a href="#">Bob Reciever</a></li>
+                        {% if friends %}
+                            {% for friend in friends %}
+                                <li class="list-group-item"><a href="{% url 'rango:profile' friend.user.username %}"> {{ friend }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No Friends</li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

@@ -50,3 +50,8 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     text = models.TextField()
     date_added = models.DateTimeField(default=datetime.now, blank=True)
+
+class Friend(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete = models.CASCADE, null=True)
+    friends = models.ManyToManyField(UserProfile, related_name='friends')
+
