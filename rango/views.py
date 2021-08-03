@@ -37,16 +37,19 @@ def about(request):
 
     return render(request, 'rango/about.html', context=context_dict)
 
-def update_liked_cats(self, request, session_user_profile, user_profile):
+def update_liked_cats(request, user_profile, category_name_slug):
         if 'like_category' in request.POST:
             cat = likedCat.objects.get_or_create(user_profile=user_profile)
+            cat.category = Category.objects.get(slug=category_name_slug)
             cat.category.likes = likedCat.category.likes + 1
-            cat.likedcats.add(session_user_profile)
+            cat.likedcats.add(cat.category)
 
         elif 'unlike_category' in request.POST:
             cat = likedCat.objects.get_or_create(user_profile=user_profile)
+            cat.category = Category.objects.get(slug=category_name_slug)
             cat.category.likes = likedCat.category.likes - 1
-            cat.likedcats.remove(session_user_profile)
+            cat.likedcats.remove(cat.category)
+        
 
 def show_category(request, category_name_slug):
 
@@ -62,7 +65,9 @@ def show_category(request, category_name_slug):
             comment.save()
         else:
             form = CommentForm()
-        
+    
+    update_liked_cats(request, request.user.userprofile, category_name_slug)   
+    
     try:
         category = Category.objects.get(slug=category_name_slug)
         pages = Page.objects.filter(category=category)
@@ -287,7 +292,6 @@ class ProfileView(View):
             return redirect(reverse('rango:index'))
 
         self.update_friend_status(request, request.user.userprofile, user_profile)
-        self.update_liked_cats(request, request.user.userprofile, user_profile)
 
         form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
 
