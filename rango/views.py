@@ -283,6 +283,18 @@ class ProfileView(View):
 
         return render(request, 'rango/profile.html', context_dict)
 
+def friends_list(request, username):
+    context_dict = {}
+    context_dict['username'] = username
+
+    try:
+        user = User.objects.get_or_create(username=username)[0]
+        context_dict['friends'] = get_all_friends(user.userprofile)
+    except:
+        return redirect(reverse('rango:index'))
+    
+    return render(request, 'rango/friends_list.html', context_dict)
+
 def get_five_friends(user_profile):
     try:
         friend = Friend.objects.get(user_profile=user_profile)

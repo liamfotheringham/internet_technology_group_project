@@ -13,9 +13,9 @@
                 <form action="" method="POST">
                     {% csrf_token %}
                     {% if is_friend == True %}
-                        <input class="btn btn-primary" name="remove_friend" type="submit" value="Remove">
+                        <input class="btn btn-primary" name="remove_friend" type="submit" value="Remove as Friend">
                     {% else %}
-                        <input class="btn btn-primary" name="add_friend" type="submit" value="Add">
+                        <input class="btn btn-primary" name="add_friend" type="submit" value="Add as Friend">
                     {% endif %}
                 </form>
             {% endif %}
@@ -62,7 +62,11 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <div class="custom-inline"><h5>Friends</h5><a href="#">See All Friends</a></div>
+                        <div class="custom-inline">
+                            <h5 >Friends</h5>
+                            <a href="{% url 'rango:friends_list' selected_user.username %}">See All Friends</a>
+                        </div>
+                        <strong><p>{{ friends.count }}</p></strong>
                     </div>
                     <ul class="list-group list-group-flush">
                         {% if friends %}
