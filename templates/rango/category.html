@@ -3,7 +3,7 @@
 
 {% block title_block %}
     {% if category %}
-        {{ category.name }}
+        {{ category.name }} 
     {% else %}
         Unknown Category
     {% endif %}
@@ -11,7 +11,7 @@
 
 {% block body_block %}
     {% if category %}
-        <h1>{{ category.name }}</h1>
+        <h1>{{ category.name }}</h1> 
         {% if pages %}
             <ul>
                 {% for page in pages %}

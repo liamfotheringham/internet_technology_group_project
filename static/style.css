@@ -17,3 +17,8 @@
     color: white;
     text-decoration: none;
 }
+
+.custom-inline{
+    display: flex !important;
+    justify-content: space-between !important;
+}

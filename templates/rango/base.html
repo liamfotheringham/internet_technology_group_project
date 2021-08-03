@@ -48,7 +48,7 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'rango:index' %}">Home</a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'rango:profile' user %}">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a></li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:register' %}">Sign Up</a></li>
@@ -87,7 +87,8 @@
             </main>
         </div>
     </div>
-
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/rango-jquery.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/rango-ajax.js' %}" crossorigin="anonymous"></script>
 </body>
-
 </html>

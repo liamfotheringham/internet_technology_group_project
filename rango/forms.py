@@ -42,7 +42,7 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('website', 'picture',)
+        fields = ('picture', 'website',)
 
 class CommentForm(forms.ModelForm):
     text = forms.CharField(widget = forms.Textarea(
