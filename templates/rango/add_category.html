@@ -12,6 +12,7 @@
         <form id="category_form" method="POST" action="{% url 'rango:add_category' %}">
 
             {% csrf_token %}
+            
             {% for hidden in form.hidden_fields %}
 
                 {{hidden}}
@@ -19,13 +20,18 @@
             {% endfor %}
 
             {% for field in form.visible_fields %}
-
+                
                 {{ field.errors }}
                 {{ field.help_text }}
-                {{ field }}
+                {{ field.name_of_field }}
+                    <div class="form-floating">
+                        <input type="text" name="name" class="form-control" id="floatingInput" placeholder="Username">
+                        <label for="floatingInput">Please enter the category name.</label>
+                    </div><br />
 
             {% endfor %}
-            <input type="submit" name="submit" value="Create Category" />
+                      
+            <input class="btn btn-primary" type="submit" name="submit" value="Create Category" />
         </form>
 
     </div>

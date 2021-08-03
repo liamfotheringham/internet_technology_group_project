@@ -20,10 +20,14 @@
 
             {{ field.errors }}
             {{ field.help_text }}
-            {{ field }}
+            {{ field.name_of_field }}
+                <div class="form-floating">
+                    <input type="text" name="{{field.name}}" class="form-control" id="floatingInput" placeholder="Username">
+                    <label for="floatingInput">Please enter the page {{field.name}}.</label>
+                </div><br />
 
             {% endfor %}
-            <input type="submit" name="submit" value="Create Page" />
+            <input class="btn btn-primary" type="submit" name="submit" value="Create Page" />
         </form>
     </div>
 {% endblock %}
