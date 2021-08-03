@@ -222,9 +222,6 @@ class ProfileView(View):
 
         all_session_friends = get_all_friends(request.user.userprofile)
 
-        print(user_profile)
-        print(all_session_friends)
-
         if(user_profile in all_session_friends):
             is_friend = True
         else:
