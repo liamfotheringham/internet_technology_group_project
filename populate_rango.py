@@ -3,7 +3,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tango_with_django_project.setti
 
 import django
 django.setup()
-from rango.models import Category, Page, Comment, User
+from rango.models import Category, Page, Comment, User, UserProfile, Friend
 
 import random
 
@@ -11,10 +11,14 @@ from datetime import datetime
 
 def populate():
 
+    mawaan_friends = ['Lisa', 'Willem']
+    lisa_friends = ['Mawaan', 'Willem']
+    willem_friends = ['Mawaan', 'Lisa']
+
     users = [
-        {'username':'Mawaan', 'firstname':'Mawaan','lastname':'test','password':'Mawaan','email':'mawaan@test.com'},
-        {'username':'Lisa', 'firstname':'Lisa','lastname':'test','password':'Lisa','email':'lisa@test.com'},
-        {'username':'Willem', 'firstname':'Willem','lastname':'test','password':'Willem','email':'willem@test.com'}
+        {'username':'Mawaan', 'firstname':'Mawaan','lastname':'test','password':'Mawaan','email':'mawaan@test.com', 'website':'http://www.mawaan.com', 'friends':mawaan_friends},
+        {'username':'Lisa', 'firstname':'Lisa','lastname':'test','password':'Lisa','email':'lisa@test.com', 'website':'http://www.lisa.com', 'friends':lisa_friends},
+        {'username':'Willem', 'firstname':'Willem','lastname':'test','password':'Willem','email':'willem@test.com', 'website':'http://www.willem.com', 'friends':willem_friends}
     ]
 
     python_pages = [
@@ -34,6 +38,7 @@ def populate():
         {'title':'Flask','url':'http://flask.pocoo.org'}
     ]
 
+
     python_comments = [{'text':'I don\'t like Python, I prefer C++!', 'username':'Mawaan', 'date_added':datetime(2021,5,21,9,20,6)},
                         {'text':'I disagree with Mawaan, Python is so powerful', 'username':'Willem', 'date_added':datetime(2021,5,21,9,21,6)}
     ]
@@ -48,7 +53,10 @@ def populate():
             }
 
     for user in users:
-        u = add_user(user['username'], user['firstname'], user['lastname'], user['password'], user['email'])
+        u = add_user(user['username'], user['firstname'], user['lastname'], user['password'], user['email'], user['website'])
+        
+    for user in users:
+        f = add_friends(user['friends'], user['username'])
 
     for cat, cat_data in cats.items():
         c = add_cat(cat, cat_data['views'], cat_data['likes'])
@@ -75,14 +83,34 @@ def add_cat(name, views = 0, likes = 0):
     c.save()
     return c
 
-def add_user(username, firstname, lastname, password, email):
+def add_user(username, firstname, lastname, password, email, website):
     u = User.objects.get_or_create(username=username)[0]
     u.first_name = firstname
     u.last_name = lastname
     u.email = email
     u.set_password(password)
     u.save()
+
+    up = UserProfile.objects.get_or_create(user=u)[0]
+    up.website = website
+    up.save()
+
     return u
+
+def add_friends(friends, username):
+    u = User.objects.get(username=username)
+    up = UserProfile.objects.get(user=u)
+    f = Friend.objects.get_or_create(user_profile=up)[0]
+
+    for friend in friends:
+        print(friend)
+        f_u = User.objects.get(username=friend)
+        f_up = UserProfile.objects.get(user=f_u)
+        f.friends.add(f_up)
+        
+    f.save()
+
+    return f
 
 def add_comment(cat, username, text, datetime):
     user = User.objects.get(username=username)
