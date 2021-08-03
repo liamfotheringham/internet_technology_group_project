@@ -5,8 +5,6 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.views.generic import View
-from django.utils.decorators import method_decorator
 
 from rango.models import Category, Page, Comment
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm, CommentForm
@@ -154,7 +152,7 @@ def user_login(request):
         #get supplied user credentials
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        
         user = authenticate(username=username, password=password) #verify if the user details are valid
 
         if user: #details are correct
@@ -197,18 +195,3 @@ def visitor_cookie_handler(request): #obtain number of visits to the site
 
     request.session['visits'] = visits #update/set visits cookie
 
-
-class LikeCategoryView(View): 
-    @method_decorator(login_required)
-    def get(self, request):
-        category_id = request.GET['category_id'] 
-        try:
-            category = Category.objects.get(id=int(category_id)) 
-        except Category.DoesNotExist:
-            return HttpResponse(-1) 
-        except ValueError:
-            return HttpResponse(-1) 
-        
-        category.likes = category.likes + 1
-        category.save()
-        return HttpResponse(category.likes)
