@@ -1,0 +1,85 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    {{ selected_user.username }}
+{% endblock title_block %}
+
+{% block body_block %}
+    <div class="jumbotron p-4">
+        <div class="container custom-inline">
+            <h1 class="jumbotron-heading">{{selected_user.username}}'s Profile</h1>
+            {% if request.user.is_authenticated and selected_user != user %}
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% if is_friend == True %}
+                        <input class="btn btn-primary" name="remove_friend" type="submit" value="Remove as Friend">
+                    {% else %}
+                        <input class="btn btn-primary" name="add_friend" type="submit" value="Add as Friend">
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                {% if user_profile.picture %}
+                    <img class="img-fluid" src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="{{selected_user.username}}'s Profile Picture">
+                {% else %}
+                    <img class="img-fluid" src="{% static 'images/default_user.jpg' %}" alt="{{selected_user.username}}'s Profile Picture">
+                {% endif %}
+                <br />
+                <br />
+                {% if selected_user == user %}
+                    <form action="." method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{form.as_p}}
+
+                        <input class="btn btn-primary" type="submit" value="Update">
+                    </form>
+                {% else %}
+                    <strong>Website: </strong><a href="{{ user_profile.website }}">{{ user_profile.website }}</a>
+                {% endif %}
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Liked Categories</h5>
+                    </div>
+                    <ul class="list-group list-group-flush overflow-auto">
+                        <li class="list-group-item"><a href="#">Python</a></li>
+                        <li class="list-group-item"><a href="#">Django</a></li>
+                        <li class="list-group-item"><a href="#">Web Frameworks</a></li>
+                        <li class="list-group-item"><a href="#">NodeJS</a></li>
+                        <li class="list-group-item"><a href="#">C++</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="custom-inline">
+                            <h5 >Friends</h5>
+                            <a href="{% url 'rango:friends_list' selected_user.username %}">See All Friends</a>
+                        </div>
+                        <strong><p>{{ friends.count }}</p></strong>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% if friends %}
+                            {% for friend in friends %}
+                                <li class="list-group-item"><a href="{% url 'rango:profile' friend.user.username %}"> {{ friend }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No Friends</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+{% endblock body_block %}

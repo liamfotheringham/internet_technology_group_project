@@ -4,9 +4,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.views import View
 
-from rango.models import Category, Page, Comment
+from rango.models import Category, Page, Comment, UserProfile, Friend
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm, CommentForm
 
 from datetime import datetime
@@ -195,3 +198,115 @@ def visitor_cookie_handler(request): #obtain number of visits to the site
 
     request.session['visits'] = visits #update/set visits cookie
 
+class ProfileView(View):
+    def get_user_details(self, username):
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
+
+        user_profile = UserProfile.objects.get_or_create(user=user)[0]
+        form = UserProfileForm({'website':user_profile.website,
+                                'picture':user_profile.picture})
+
+        return(user, user_profile, form)
+
+    def update_friend_status(self, request, session_user_profile, user_profile):
+        if 'remove_friend' in request.POST:
+            session_profile_friends = Friend.objects.get_or_create(user_profile=session_user_profile)[0]
+            session_profile_friends.friends.remove(user_profile)
+
+            user_profile_friends = Friend.objects.get_or_create(user_profile=user_profile)[0]
+            user_profile_friends.friends.remove(session_user_profile)
+
+        elif 'add_friend' in request.POST:
+
+            session_profile_friends = Friend.objects.get_or_create(user_profile=session_user_profile)[0]
+            session_profile_friends.friends.add(user_profile)
+
+            user_profile_friends = Friend.objects.get_or_create(user_profile=user_profile)[0]
+            user_profile_friends.friends.add(session_user_profile)
+
+
+    def get(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+
+        except TypeError:
+            return redirect(reverse('rango:index'))
+
+        friends = get_five_friends(user_profile)
+
+        if request.user.is_authenticated:
+            all_session_friends = get_all_friends(request.user.userprofile)
+            
+            if(all_session_friends and user_profile in all_session_friends):
+                is_friend = True
+            else:
+                is_friend = False
+        else:
+            is_friend = False
+
+
+        context_dict = {'user_profile':user_profile,
+                        'selected_user':user,
+                        'form':form,
+                        'friends':friends,
+                        'is_friend':is_friend}
+        
+        return render(request, 'rango/profile.html', context_dict)
+    
+    def post(self, request, username):
+        
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+
+        except:
+            return redirect(reverse('rango:index'))
+
+        self.update_friend_status(request, request.user.userprofile, user_profile)
+
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('rango:profile', user.username)
+        else:
+            print(form.errors)
+
+        friends = get_five_friends(user_profile)
+
+        context_dict = {'user_profile':user_profile,
+                        'selected_user':user,
+                        'form':form,
+                        'friends':friends}
+
+        return render(request, 'rango/profile.html', context_dict)
+
+def friends_list(request, username):
+    context_dict = {}
+    context_dict['username'] = username
+
+    try:
+        user = User.objects.get_or_create(username=username)[0]
+        context_dict['friends'] = get_all_friends(user.userprofile)
+    except:
+        return redirect(reverse('rango:index'))
+    
+    return render(request, 'rango/friends_list.html', context_dict)
+
+def get_five_friends(user_profile):
+    try:
+        friend = Friend.objects.get(user_profile=user_profile)
+        return friend.friends.all()[:5]
+        
+    except Friend.DoesNotExist:
+        return None
+
+def get_all_friends(user_profile):
+    try:
+        friend = Friend.objects.get(user_profile=user_profile)
+        return friend.friends.all()
+        
+    except Friend.DoesNotExist:
+        return None

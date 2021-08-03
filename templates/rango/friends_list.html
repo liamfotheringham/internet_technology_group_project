@@ -1,0 +1,46 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+{{ username }}'s Friend List
+{% endblock title_block %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+    <div class="container">
+        <h1 class="jumbotron-heading">{{ username }}'s Friends List</h1>
+    </div>
+</div>
+<div>
+    <div class="container">
+        <div class="row">
+            {% if friends %}
+            {% for friend in friends %}
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-2 col-sm-6">
+                        {% if friend.picture %}
+                        <img class="img-fluid rounded-start" src="{{ MEDIA_URL }}{{friend.picture}}"
+                            alt="{{friend}}'s profile picture">
+                        {% else %}
+                        <img class="img-fluid rounded-start" src="{% static 'images/default_user.jpg' %}"
+                            alt="{{friend}}'s profile picture">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-10 col-sm-6">
+                        <div class="card-body">
+                            <h3><a href="{% url 'rango:profile' friend %}">{{friend}}</a></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+                <h3>No Friends to Show</h3>
+                <br />
+                <br />
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock body_block %}
