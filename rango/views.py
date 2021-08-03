@@ -40,15 +40,26 @@ def about(request):
 def update_liked_cats(request, user_profile, category_name_slug):
         if 'like_category' in request.POST:
             cat = likedCat.objects.get_or_create(user_profile=user_profile)
-            cat.category = Category.objects.get(slug=category_name_slug)
-            cat.category.likes = likedCat.category.likes + 1
-            cat.likedcats.add(cat.category)
+            category = Category.objects.get(slug=category_name_slug)
+            category.likes = category.likes + 1
+            cat.likedcats.add(category)
 
         elif 'unlike_category' in request.POST:
             cat = likedCat.objects.get_or_create(user_profile=user_profile)
-            cat.category = Category.objects.get(slug=category_name_slug)
-            cat.category.likes = likedCat.category.likes - 1
-            cat.likedcats.remove(cat.category)
+            category = Category.objects.get(slug=category_name_slug)
+            category.likes = category.likes - 1
+            cat.likedcats.remove(category)
+        
+        if request.user.is_authenticated:
+            all_likedcats = get_all_likedcats(request.user.userprofile)
+            category = Category.objects.get(slug=category_name_slug)
+
+            if(category in all_likedcats):
+                cat_liked = True
+            else:
+                cat_liked = False
+        else:
+            cat_liked = False
         
 
 def show_category(request, category_name_slug):
@@ -67,7 +78,7 @@ def show_category(request, category_name_slug):
             form = CommentForm()
     
     update_liked_cats(request, request.user.userprofile, category_name_slug)   
-    
+
     try:
         category = Category.objects.get(slug=category_name_slug)
         pages = Page.objects.filter(category=category)
@@ -77,16 +88,6 @@ def show_category(request, category_name_slug):
         context_dict['category'] = category
         context_dict['comments'] = Comment.objects.filter(category = category).order_by('-date_added')
         context_dict['comment_form'] = form
-
-        if request.user.is_authenticated:
-            all_likedcats = get_all_likedcats(request.user.userprofile)
-
-            if(category in all_likedcats):
-                cat_liked = True
-            else:
-                cat_liked = False
-        else:
-            cat_liked = False
 
     except Category.DoesNotExist:
         context_dict['category'] = None
