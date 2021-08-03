@@ -12,6 +12,17 @@
 {% block body_block %}
     {% if category %}
         <h1>{{ category.name }}</h1> 
+        <strong id="like_count"> {{ category.likes }}</strong> likes
+        {% if request.user.is_authenticated %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% if cat_liked == True %}
+                <input class="btn btn-primary" name="unlike_category" type="submit" value="Unlike Category">
+            {% else %}
+                <input class="btn btn-primary" name="like_category" type="submit" value="Like Category">
+            {% endif %}
+        </form>
+        {% endif %}
         {% if pages %}
             <ul>
                 {% for page in pages %}

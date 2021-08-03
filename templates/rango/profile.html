@@ -48,14 +48,17 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>Liked Categories</h5>
+                        <a href="{% url 'rango:liked_categories' selected_user.username %}">See All Liked Categories</a>
                     </div>
-                    <ul class="list-group list-group-flush overflow-auto">
-                        <li class="list-group-item"><a href="#">Python</a></li>
-                        <li class="list-group-item"><a href="#">Django</a></li>
-                        <li class="list-group-item"><a href="#">Web Frameworks</a></li>
-                        <li class="list-group-item"><a href="#">NodeJS</a></li>
-                        <li class="list-group-item"><a href="#">C++</a></li>
-                        
+                    <strong><p>{{ likedcats.count }}</p></strong>
+                    <ul class="list-group list-group-flush">
+                        {% if likedcats %}
+                        {% for likedcat in likedcats %}
+                            <li class="list-group-item"><a href="{% url 'rango:profile' likedcat.category.name %}"> {{ likedcat }}</a></li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">No Liked categories</li>
+                    {% endif %}   
                     </ul>
                 </div>
             </div>

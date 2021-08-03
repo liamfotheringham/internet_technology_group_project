@@ -55,3 +55,7 @@ class Friend(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete = models.CASCADE, null=True)
     friends = models.ManyToManyField(UserProfile, related_name='friends')
 
+class likedCat(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete = models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete = models.CASCADE, null=True)
+    likedcats = models.ManyToManyField(UserProfile, related_name='likedcats')
