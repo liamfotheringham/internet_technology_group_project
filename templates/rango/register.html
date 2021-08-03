@@ -22,9 +22,10 @@ Register
             {% csrf_token %}
             {{ user_form.name_of_field }}
             <div class="form-floating">
-                <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username">
+                <input type="text" name="username" class="form-control" id="registerUsername" placeholder="Username">
                 <label for="floatingInput">Username</label>
             </div>
+            <span id="username-exists-span"></span>
             <div class="form-floating">
                 <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput">Email address</label>

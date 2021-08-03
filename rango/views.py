@@ -310,3 +310,17 @@ def get_all_friends(user_profile):
         
     except Friend.DoesNotExist:
         return None
+
+def check_username(request):
+    if 'username' in request.GET:
+        username = request.GET['username']
+        print(username)
+
+    try:
+        username_exists = User.objects.get(username=username)
+        username_exists = True
+
+    except User.DoesNotExist:
+        username_exists = False
+
+    return render(request, 'rango/username_exists.html', {'username_exists': username_exists})
