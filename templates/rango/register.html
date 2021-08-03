@@ -30,9 +30,15 @@ Register
                 <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating">
-                <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input type="password" name="password" class="form-control" id="registerPassword" placeholder="Password">
                 <label for="floatingPassword">Password</label>
             </div>
+            <div class="form-floating">
+                <input type="password" name="confirm-password" class="form-control" id="registerConfirmPassword" placeholder=" Confirm Password">
+                <label for="floatingPassword">Confirm Password</label>
+            </div>
+            <span id="matching-password-span" class="not-matching-passwords">Passwords Do Not Match</span>
+            <br>
             {{ profile_form.name_of_field }}
             <div class="form-floating">
                 <input type="text" name="website" class="form-control" id="floatingInput" placeholder="www.example.com">
@@ -43,8 +49,7 @@ Register
             <input type="file" name="picture" class="form-control" id="customFile" /><br />
 
 
-            <input class="btn btn-primary centre" type="submit" name="submit" value="Register" />
-
+            <input class="btn btn-primary centre" id="register-submit-button" type="submit" name="submit" value="Register" disabled/>
 
         </form>
 	</div>
