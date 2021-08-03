@@ -10,11 +10,14 @@
         <div class="container custom-inline">
             <h1 class="jumbotron-heading">{{selected_user.username}}'s Profile</h1>
             {% if request.user.is_authenticated and selected_user != user %}
-                {% if is_friend == True %}
-                    <input class="btn btn-primary" type="submit" value="Remove">
-                {% else %}
-                    <input class="btn btn-primary" type="submit" value="Add">
-                {% endif %}
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% if is_friend == True %}
+                        <input class="btn btn-primary" name="remove_friend" type="submit" value="Remove">
+                    {% else %}
+                        <input class="btn btn-primary" name="add_friend" type="submit" value="Add">
+                    {% endif %}
+                </form>
             {% endif %}
         </div>
     </div>
