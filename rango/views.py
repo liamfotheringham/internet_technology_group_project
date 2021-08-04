@@ -43,13 +43,18 @@ def update_liked_cats(request, user_profile, category_name_slug):
             cat = LikedCat.objects.get_or_create(user_profile=user_profile)[0]
             category = Category.objects.get(slug=category_name_slug)
             category.likes = category.likes + 1
+            category.save()
             cat.likedcats.add(category)
+            cat.save()
 
         elif 'unlike_category' in request.POST:
             cat = LikedCat.objects.get_or_create(user_profile=user_profile)[0]
             category = Category.objects.get(slug=category_name_slug)
             category.likes = category.likes - 1
+            category.save()
             cat.likedcats.remove(category)
+            cat.save()
+
         
 
 def show_category(request, category_name_slug):
@@ -68,20 +73,22 @@ def show_category(request, category_name_slug):
             form = CommentForm()
     
     if request.user.is_authenticated:
-        update_liked_cats(request, request.user.userprofile, category_name_slug)  
+        update_liked_cats(request, request.user.userprofile, category_name_slug)
 
-    if request.user.is_authenticated:
         all_likedcats = get_all_likedcats(request.user.userprofile)
         category = Category.objects.get(slug=category_name_slug)
 
         if (all_likedcats != None):
-    
-            if(category and request.user.userprofile in all_likedcats):
-                cat_liked = True
+            
+            if(category in all_likedcats):
+                is_liked = True
+                print(is_liked)
             else:
-                cat_liked = False
+                is_liked = False
+                print(is_liked)
     else:
-        cat_liked = False 
+        is_liked = False 
+        print(is_liked)
 
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -92,13 +99,15 @@ def show_category(request, category_name_slug):
         context_dict['category'] = category
         context_dict['comments'] = Comment.objects.filter(category = category).order_by('-date_added')
         context_dict['comment_form'] = form
+        context_dict['is_liked'] = is_liked
 
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
         context_dict['comments'] = None
         context_dict['comment_form'] = None
-
+        context_dict['is_liked'] = None
+    
     return render(request, 'rango/category.html', context=context_dict)
 
 @login_required
@@ -345,6 +354,7 @@ def get_all_friends(user_profile):
     except Friend.DoesNotExist:
         return None
 
+# get 5 of the categories liked by user
 def get_five_likedcats(user_profile):
     try:
         likedcat = LikedCat.objects.get(user_profile=user_profile)
@@ -353,6 +363,7 @@ def get_five_likedcats(user_profile):
     except LikedCat.DoesNotExist:
         return None
 
+# get all categories liked by user
 def get_all_likedcats(user_profile):
     try:
         likedcat = LikedCat.objects.get(user_profile=user_profile)
@@ -360,7 +371,8 @@ def get_all_likedcats(user_profile):
     
     except LikedCat.DoesNotExist:
         return None
-        
+
+# display liked categories in a list   
 def likedcat_list(request, username):
     context_dict = {}
     context_dict['username'] = username

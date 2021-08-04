@@ -3,7 +3,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tango_with_django_project.setti
 
 import django
 django.setup()
-from rango.models import Category, Page, Comment, User, UserProfile, Friend
+from rango.models import Category, LikedCat, Page, Comment, User, UserProfile, Friend
 
 import random
 
@@ -66,7 +66,11 @@ def populate():
 
         for cm in cat_data['comments']:
             add_comment(c, cm['username'], cm['text'], cm['date_added'])
-    
+        
+    for user in users:
+        for cat in cats.items():
+            add_likedcat(user['username', cat])
+
     for c in Category.objects.all():
         for p in Page.objects.filter(category=c):
             print(f'- {c}: {p}')
@@ -117,6 +121,16 @@ def add_comment(cat, username, text, datetime):
     cm = Comment.objects.get_or_create(category = cat, text = text, date_added=datetime, user=user)[0]
     cm.save()
     return cm
+
+def add_likedcat(username, cat):
+    u = User.objects.get(username=username)
+    up = UserProfile.objects.get(user=u)
+    lc = LikedCat.objects.get_or_create(user_profile=up)[0]
+    lc.likedcats.add(cat)
+        
+    lc.save()
+
+    return lc
 
 #Start execution here!
 if __name__ == '__main__':
