@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.views import View
 
-from rango.models import Category, Page, Comment, UserProfile, Friend, likedCat
+from rango.models import Category, Page, Comment, UserProfile, Friend, LikedCat
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm, CommentForm
 
 from datetime import datetime
@@ -38,28 +38,18 @@ def about(request):
     return render(request, 'rango/about.html', context=context_dict)
 
 def update_liked_cats(request, user_profile, category_name_slug):
+
         if 'like_category' in request.POST:
-            cat = likedCat.objects.get_or_create(user_profile=user_profile)
+            cat = LikedCat.objects.get_or_create(user_profile=user_profile)[0]
             category = Category.objects.get(slug=category_name_slug)
             category.likes = category.likes + 1
             cat.likedcats.add(category)
 
         elif 'unlike_category' in request.POST:
-            cat = likedCat.objects.get_or_create(user_profile=user_profile)
+            cat = LikedCat.objects.get_or_create(user_profile=user_profile)[0]
             category = Category.objects.get(slug=category_name_slug)
             category.likes = category.likes - 1
             cat.likedcats.remove(category)
-        
-        if request.user.is_authenticated:
-            all_likedcats = get_all_likedcats(request.user.userprofile)
-            category = Category.objects.get(slug=category_name_slug)
-
-            if(category in all_likedcats):
-                cat_liked = True
-            else:
-                cat_liked = False
-        else:
-            cat_liked = False
         
 
 def show_category(request, category_name_slug):
@@ -77,7 +67,21 @@ def show_category(request, category_name_slug):
         else:
             form = CommentForm()
     
-    update_liked_cats(request, request.user.userprofile, category_name_slug)   
+    if request.user.is_authenticated:
+        update_liked_cats(request, request.user.userprofile, category_name_slug)  
+
+    if request.user.is_authenticated:
+        all_likedcats = get_all_likedcats(request.user.userprofile)
+        category = Category.objects.get(slug=category_name_slug)
+
+        if (all_likedcats != None):
+    
+            if(category and request.user.userprofile in all_likedcats):
+                cat_liked = True
+            else:
+                cat_liked = False
+    else:
+        cat_liked = False 
 
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -343,16 +347,18 @@ def get_all_friends(user_profile):
 
 def get_five_likedcats(user_profile):
     try:
-        likedcat = likedCat.objects.get(user_profile=user_profile)
+        likedcat = LikedCat.objects.get(user_profile=user_profile)
         return likedcat.likedcats.all()[:5]
-    except likedCat.DoesNotExist:
+    
+    except LikedCat.DoesNotExist:
         return None
 
 def get_all_likedcats(user_profile):
     try:
-        likedcat = likedCat.objects.get(user_profile=user_profile)
+        likedcat = LikedCat.objects.get(user_profile=user_profile)
         return likedcat.likedcats.all()
-    except likedCat.DoesNotExist:
+    
+    except LikedCat.DoesNotExist:
         return None
         
 def likedcat_list(request, username):

@@ -14,13 +14,13 @@
 <div>
     <div class="container">
         <div class="row">
-            {% if likedcat %}
+            {% if likedcats %}
             {% for likedcat in likedcats %}
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-md-10 col-sm-6">
                         <div class="card-body">
-                            <h3><a href="{% url 'rango:profile' likedcat %}">{{likedcat}}</a></h3>
+                            <h3><a href="{% url 'rango:show_category' likedcat.slug  %}">{{ likedcat }}</a></h3>
                         </div>
                     </div>
                 </div>

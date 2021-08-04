@@ -47,14 +47,16 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Liked Categories</h5>
-                        <a href="{% url 'rango:liked_categories' selected_user.username %}">See All Liked Categories</a>
+                        <div class="custom-inline">
+                            <h5>Liked Categories</h5>
+                            <a href="{% url 'rango:liked_categories' selected_user.username %}">See All Liked Categories</a>
+                            </div>
+                        <strong><p>{{ likedcats.count }}</p></strong>
                     </div>
-                    <strong><p>{{ likedcats.count }}</p></strong>
                     <ul class="list-group list-group-flush">
                         {% if likedcats %}
                         {% for likedcat in likedcats %}
-                            <li class="list-group-item"><a href="{% url 'rango:profile' likedcat.category.name %}"> {{ likedcat }}</a></li>
+                            <li class="list-group-item"><a href="{% url 'rango:show_category' likedcat.slug  %}"> {{ likedcat }}</a></li>
                         {% endfor %}
                     {% else %}
                         <li class="list-group-item">No Liked categories</li>
