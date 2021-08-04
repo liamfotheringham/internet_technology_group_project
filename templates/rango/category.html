@@ -10,12 +10,26 @@ Unknown Category
 {% endblock %}
 
 {% block body_block %}
-{% if category %}
-<div class="jumbotron p-4">
-    <div class="container custom-inline">
-        <h1>{{ category.name }}</h1>
+    {% if category %}
+    <div class="jumbotron p-4">
+        <div class="container custom-inline">
+            <h1>{{ category.name }}</h1> 
+        </div>
     </div>
-</div>
+    <div class="container custom-inline">
+        <strong id="like_count">{{ category.likes }} likes</strong> 
+        {% if request.user.is_authenticated %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% if is_liked == True %}
+                    <input class="btn btn-primary" name="unlike_category" type="submit" value="Unlike Category">
+                {% else %}
+                    <input class="btn btn-primary" name="like_category" type="submit" value="Like Category">
+                {% endif %} 
+            </form>
+        {% endif %}
+    </div>
+
 <div class="container">
     <div class="row">
         {% if pages %}
