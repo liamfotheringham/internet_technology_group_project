@@ -324,3 +324,12 @@ def check_username(request):
         username_exists = False
 
     return render(request, 'rango/username_exists.html', {'username_exists': username_exists})
+
+def search(request):
+    """ search function """
+    if request.method == "GET":
+        query_name = request.GET.get('name', None)
+        if query_name:
+            results = Category.objects.filter(name__contains=query_name)
+            return render(request, 'rango/search.html', {"results":results})
+    return render(request, 'rango/search.html')

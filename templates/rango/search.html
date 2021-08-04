@@ -1,0 +1,36 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+Search
+{% endblock  %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+    <div class="container custom-inline">
+        <h1>Search with Rango!</h1><br />
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <form action="{% url 'rango:search' %}" method="GET">
+            {% csrf_token %} 
+            <input type="text" name="name">
+            <input type="submit" name="submit" value="Search for a Category">
+        </form>
+        {% if results %}
+                <h3><strong>Results</strong></h3>
+                <ul class="list-group">
+                    {% for result in results %}
+                    
+                    <li class="list-group-item">
+                        <h2><strong><a href="{% url 'rango:show_category' result.slug %}">{{ result.name }}</a></strong></h2>
+                        <br />
+                        <h4>Likes {{ result.likes }} - Views {{ result.views }}</h4>
+                    </li>
+                    {% endfor %}
+                </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock  %}
