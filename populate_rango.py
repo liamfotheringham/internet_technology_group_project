@@ -11,6 +11,11 @@ from datetime import datetime
 
 def populate():
 
+    try:
+        super_user = User.objects.create_superuser("admin", "test@test.com", "admin")
+    except:
+        pass
+
     mawaan_friends = ['Lisa', 'Willem']
     lisa_friends = ['Mawaan', 'Willem']
     willem_friends = ['Mawaan', 'Lisa']
@@ -95,7 +100,7 @@ def add_page(cat, title, url, views = 0):
     return p
 
 def add_cat(name, views = 0, likes = 0):
-    c = Category.objects.get_or_create(name=name, likes=likes, views=views)[0]
+    c = Category.objects.get_or_create(name=name)[0]
     c.save()
     return c
 
@@ -119,7 +124,6 @@ def add_friends(friends, username):
     f = Friend.objects.get_or_create(user_profile=up)[0]
 
     for friend in friends:
-        print(friend)
         f_u = User.objects.get(username=friend)
         f_up = UserProfile.objects.get(user=f_u)
         f.friends.add(f_up)
