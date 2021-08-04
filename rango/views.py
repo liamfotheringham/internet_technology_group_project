@@ -84,6 +84,8 @@ def show_category(request, category_name_slug):
                 is_liked = True
             else:
                 is_liked = False
+        else:
+            is_liked = False
     else:
         is_liked = False 
        
