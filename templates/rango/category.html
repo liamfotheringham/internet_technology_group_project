@@ -76,7 +76,7 @@ Unknown Category
                     </div>
                     <div class="col-md-10">
                         <div class="card-body">
-                            <h4 class="card-title">{{ comment.user }}</h4>
+                            <h4 class="card-title"><a href="{% url 'rango:profile' comment.user.username %}">{{ comment.user }}</a></h4>
                             <p class="card-text">{{ comment.text }}</p>
                         </div>
                     </div>
