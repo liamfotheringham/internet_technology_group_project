@@ -15,10 +15,14 @@ def populate():
     lisa_friends = ['Mawaan', 'Willem']
     willem_friends = ['Mawaan', 'Lisa']
 
+    mawaan_likedcat = ['Python', 'Django']
+    lisa_likedcat = ['Django', 'Other Frameworks']
+    willem_likedcat = ['Python', 'Django', 'Other Frameworks']
+
     users = [
-        {'username':'Mawaan', 'firstname':'Mawaan','lastname':'test','password':'Mawaan','email':'mawaan@test.com', 'website':'http://www.mawaan.com', 'friends':mawaan_friends},
-        {'username':'Lisa', 'firstname':'Lisa','lastname':'test','password':'Lisa','email':'lisa@test.com', 'website':'http://www.lisa.com', 'friends':lisa_friends},
-        {'username':'Willem', 'firstname':'Willem','lastname':'test','password':'Willem','email':'willem@test.com', 'website':'http://www.willem.com', 'friends':willem_friends}
+        {'username':'Mawaan', 'firstname':'Mawaan','lastname':'test','password':'Mawaan','email':'mawaan@test.com', 'website':'http://www.mawaan.com', 'friends':mawaan_friends, 'likedcats': mawaan_likedcat},
+        {'username':'Lisa', 'firstname':'Lisa','lastname':'test','password':'Lisa','email':'lisa@test.com', 'website':'http://www.lisa.com', 'friends':lisa_friends, 'likedcats': lisa_likedcat},
+        {'username':'Willem', 'firstname':'Willem','lastname':'test','password':'Willem','email':'willem@test.com', 'website':'http://www.willem.com', 'friends':willem_friends, 'likedcats': willem_likedcat}
     ]
 
     python_pages = [
@@ -68,8 +72,16 @@ def populate():
             add_comment(c, cm['username'], cm['text'], cm['date_added'])
         
     for user in users:
-        for cat in cats.items():
-            add_likedcat(user['username', cat])
+        if user['username'] == 'Mawaan':
+            add_likedcat(user['username'], 'Python')
+            add_likedcat(user['username'], 'Django')
+        elif user['username'] == 'Lisa':
+            add_likedcat(user['username'], 'Django')
+            add_likedcat(user['username'], 'Other Frameworks')
+        else:
+            add_likedcat(user['username'], 'Python')
+            add_likedcat(user['username'], 'Django')
+            add_likedcat(user['username'], 'Other Frameworks')
 
     for c in Category.objects.all():
         for p in Page.objects.filter(category=c):
@@ -122,10 +134,13 @@ def add_comment(cat, username, text, datetime):
     cm.save()
     return cm
 
-def add_likedcat(username, cat):
+def add_likedcat(username, catname):
     u = User.objects.get(username=username)
     up = UserProfile.objects.get(user=u)
     lc = LikedCat.objects.get_or_create(user_profile=up)[0]
+    cat = Category.objects.get(name=catname)
+    cat.likes = cat.likes + 1
+    cat.save()
     lc.likedcats.add(cat)
         
     lc.save()
