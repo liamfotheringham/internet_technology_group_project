@@ -4,6 +4,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tango_with_django_project.setti
 import django
 django.setup()
 from rango.models import Category, LikedCat, Page, Comment, User, UserProfile, Friend
+from allauth.socialaccount.models import SocialApp
+from django.contrib.sites.models import Site
 
 import random
 
@@ -18,6 +20,16 @@ def populate():
     except:
         pass
 
+    site = Site.objects.get(domain="example.com")
+
+    google_api_social_app = SocialApp.objects.get_or_create(
+        name='Google API', 
+        client_id = "290913257460-iqtb5bjsqkgn5o0n9shb6kvs74g767di.apps.googleusercontent.com",
+        secret = "3I-cTT_zq5PaPopVezd6r73R",
+        provider = "google")[0]
+
+    google_api_social_app.sites.add(site)
+    google_api_social_app.save()
 
 
     mawaan_friends = ['Lisa', 'Willem']
