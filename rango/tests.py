@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from rango.models import Comment, UserProfile, User, Category
+from rango.models import Comment, UserProfile, User, Category, Friend
 
 class CommentMethodTests(TestCase):
 
@@ -49,6 +49,48 @@ class CategoryViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['comments'].count(), 2)
 
+class ProfileViewTests(TestCase):
+    def test_if_friends_display_on_profile_page(self):
+
+        '''
+        If userprofile has friends, display friends on profile page
+        '''
+
+        user_one = add_user("johndoe", "John", "Doe")
+        user_two = add_user("janedoe", "Jane", "Doe")
+        user_three = add_user("alice", "Alice", "Sender")
+
+        userprofile_one = add_user_profile(user_one)
+        userprofile_two = add_user_profile(user_two)
+        userprofile_three = add_user_profile(user_three)
+
+        friend = add_friend(userprofile_one, userprofile_two)
+        friend = add_friend(userprofile_one, userprofile_three)
+
+        response = self.client.get(reverse('rango:profile', kwargs={'username': user_one.username}))
+
+        print(response)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "johndoe")
+        self.assertContains(response, "janedoe")
+        self.assertContains(response, "alice")
+        
+    def test_if_no_friends_display_on_profile_page(self):
+
+        '''
+        If userprofile has no friends, display "No Friends"
+        '''
+
+        user_one = add_user("johndoe", "John", "Doe")
+
+        userprofile_one = add_user_profile(user_one)
+
+        response = self.client.get(reverse('rango:profile', kwargs={'username': user_one.username}))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No Friends")
+
 def add_user(username="johndoe", firstname="John", lastname="Doe"):
     user = User.objects.get_or_create(username=username)[0]
     user.first_name = firstname
@@ -70,3 +112,16 @@ def add_comment_auto_date(user, text, category):
     comment.save()
 
     return comment
+
+def add_user_profile(user):
+    userprofile = UserProfile.objects.get_or_create(user=user)[0]
+    userprofile.save()
+
+    return userprofile
+
+def add_friend(userprofile_current, userprofile_to_add):
+    friend = Friend.objects.get_or_create(user_profile=userprofile_current)[0]
+    friend.friends.add(userprofile_to_add)
+    friend.save()
+
+    return friend
