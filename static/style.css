@@ -84,3 +84,7 @@
 .not-matching-passwords{
     color: rgb(162, 32, 32);
 }
+
+#back-to-top-button{
+    visibility: hidden;
+}
