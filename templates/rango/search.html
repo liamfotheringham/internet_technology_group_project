@@ -14,9 +14,12 @@ Search
 <div class="container">
     <div class="row">
         <form action="{% url 'rango:search' %}" method="GET">
-            {% csrf_token %} 
-            <input type="text" name="name">
-            <input type="submit" name="submit" value="Search for a Category">
+            {% csrf_token %}
+            <div class="form-floating"> 
+                <input type="text" class="form-control" name="name" placeholder="Search">
+                <label for="floatingInput">Search...</label><br />
+                <input class="btn btn-primary centre" type="submit" name="submit" value="Search for a Category">
+            </div>
         </form>
         {% if results %}
                 <h3><strong>Results</strong></h3>
