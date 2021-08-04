@@ -82,13 +82,11 @@ def show_category(request, category_name_slug):
             
             if(category in all_likedcats):
                 is_liked = True
-                print(is_liked)
             else:
                 is_liked = False
-                print(is_liked)
     else:
         is_liked = False 
-        print(is_liked)
+       
 
     try:
         category = Category.objects.get(slug=category_name_slug)
