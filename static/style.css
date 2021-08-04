@@ -1,4 +1,90 @@
+.about {
+    overflow: hidden;
+    column-count: 2;
+    column-gap: 50px;
+    column-rule-style: solid;
+    column-rule-width: 1px;
+    column-width: auto;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+#google_login {
+    color: black !important;
+    text-decoration: none;
+
+}
+
 .custom-inline{
     display: flex !important;
     justify-content: space-between !important;
+}
+
+.categories-list{
+    list-style-type: none;
+    margin-bottom: 10px;
+    padding: 0;
+}
+
+.categories-item{
+    margin-bottom: 5px;
+}
+
+.custom-or{
+    text-align: center;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.custom-or:before,
+.custom-or:after{
+    background-color: #333;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+}
+
+.custom-or:before{
+    right: 0.5em;
+    margin-left: -50%;
+}
+
+.custom-or:after{
+    left: 0.5em;
+    margin-right: -50%;
+}
+
+.custom-centre{
+    text-align: center !important;
+    display: block;
+}
+
+.add-page-button{
+    width:10em !important;
+    margin-bottom: 1em;
+}
+
+.custom-input-width{
+    width: 100%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.matching-passwords{
+    color: rgb(74, 189, 16);
+}
+
+.not-matching-passwords{
+    color: rgb(162, 32, 32);
+}
+
+#back-to-top-button{
+    visibility: hidden;
 }

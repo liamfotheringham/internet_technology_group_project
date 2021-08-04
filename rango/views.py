@@ -55,8 +55,6 @@ def update_liked_cats(request, user_profile, category_name_slug):
             cat.likedcats.remove(category)
             cat.save()
 
-        
-
 def show_category(request, category_name_slug):
 
     context_dict = {}
@@ -71,24 +69,24 @@ def show_category(request, category_name_slug):
             comment.save()
         else:
             form = CommentForm()
+
+    is_liked = False
     
     if request.user.is_authenticated:
         update_liked_cats(request, request.user.userprofile, category_name_slug)
 
         all_likedcats = get_all_likedcats(request.user.userprofile)
-        category = Category.objects.get(slug=category_name_slug)
 
-        if (all_likedcats != None):
-            
-            if(category in all_likedcats):
-                is_liked = True
-            else:
-                is_liked = False
-        else:
+        try:        
+            category = Category.objects.get(slug=category_name_slug)
+
+            if (all_likedcats != None):
+                
+                if(category in all_likedcats):
+                    is_liked = True
+
+        except Category.DoesNotExist:
             is_liked = False
-    else:
-        is_liked = False 
-       
 
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -385,3 +383,16 @@ def likedcat_list(request, username):
     
     return render(request, 'rango/liked_categories.html', context_dict)
 
+def check_username(request):
+    if 'username' in request.GET:
+        username = request.GET['username']
+        print(username)
+
+    try:
+        username_exists = User.objects.get(username=username)
+        username_exists = True
+
+    except User.DoesNotExist:
+        username_exists = False
+
+    return render(request, 'rango/username_exists.html', {'username_exists': username_exists})

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rango.models import Page, Category, UserProfile, Comment
 
 class CategoryForm(forms.ModelForm):
-    name = forms.CharField(max_length = Category.NAME_MAX_LENGTH, help_text="Please enter the category name.")
+    name = forms.CharField(max_length = Category.NAME_MAX_LENGTH)
     views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     slug = forms.CharField(widget=forms.HiddenInput(), required=False)
@@ -45,7 +45,7 @@ class UserProfileForm(forms.ModelForm):
         fields = ('picture', 'website',)
 
 class CommentForm(forms.ModelForm):
-    text = forms.CharField(widget = forms.Textarea(
+    text = forms.CharField(label='',widget = forms.Textarea(
     attrs={
         'class':'form-control',
         'placeholder':'Add a Comment...',

@@ -7,19 +7,31 @@
 {% endblock title_block %}
 
 {% block body_block %}
-    <h1>Login to Rango</h1>
-    <form id="login_form" method="POST" action="{% url 'rango:login' %}">
-        {% csrf_token %}
-        Username: <input type="text" name="username" value="" size="50" />
-        <br />
-        Password: <input type="text" name="password" value="" size="50" />
-        <br />
-        <input type="submit" value="submit" />
-    </form>
-    <br />
-    <h5>Or</h5>
-    <br />
-    <a href="{% provider_login_url "google" %}">Login with Google</a>
-    <br />
+<div class="jumbotron p-4">
+    <div class="container custom-inline">
+        <h1>Login</h1>
+	</div>
+</div>
+<div class="container">
+    <div class="row">
+        <form id="login_form" method="POST" action="{% url 'rango:login' %}">
+            {% csrf_token %}
+            <div class="form-floating">
+                <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username">
+                <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label><br />
+            </div>
+            <input class="btn btn-primary custom-input-width" type="submit" value="Login"/>
+        </form>
+        <h5 class="custom-or">OR</h5>
+        <div class="btn btn-light">
+            <a id="google_login" href="{% provider_login_url "google" %}">Sign In with Google</a><br />
+        </div>
+    </div>
+</div>
+    
 {% endblock body_block %}
 

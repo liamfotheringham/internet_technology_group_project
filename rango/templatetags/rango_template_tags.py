@@ -5,5 +5,5 @@ register = template.Library()
 
 @register.inclusion_tag('rango/categories.html')
 def get_category_list(current_category = None):
-    return {'categories': Category.objects.all(),
+    return {'categories': Category.objects.all()[:5],
             'current_category': current_category}

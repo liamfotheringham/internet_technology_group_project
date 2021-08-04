@@ -2,24 +2,58 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Register
+Register
 {% endblock title_block %}
 
 {% block body_block %}
-    <h1>Register for Rango</h1>
-    {% if registered %}
+<div class="jumbotron p-4">
+    <div class="container custom-inline">
+        <h1>Register</h1>
+    </div>
+</div>    
+<div class="container">
+    <div class="row">
+        {% if registered %}
         Rango says: <strong>thank you for registering!</strong>
         <a href="{% url 'rango:index' %}">Return to the homepage.</a>
-    {% else %}
-        Rango says: <strong>register here!</strong>
+        {% else %}
         <form id="user_form" method="POST" action="{% url 'rango:register' %}" enctype="multipart/form-data">
-        
-            {% csrf_token %}
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
 
-            <input type="submit" name="submit" value="Register" />
+            {% csrf_token %}
+            {{ user_form.name_of_field }}
+            <div class="form-floating">
+                <input type="text" name="username" class="form-control" id="registerUsername" placeholder="Username">
+                <label for="floatingInput">Username</label>
+            </div>
+            <span id="username-exists-span"></span>
+            <div class="form-floating">
+                <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="password" class="form-control" id="registerPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="confirm-password" class="form-control" id="registerConfirmPassword" placeholder=" Confirm Password">
+                <label for="floatingPassword">Confirm Password</label>
+            </div>
+            <span id="matching-password-span" class="not-matching-passwords">Passwords Do Not Match</span>
+            <br>
+            {{ profile_form.name_of_field }}
+            <div class="form-floating">
+                <input type="text" name="website" class="form-control" id="floatingInput" placeholder="www.example.com">
+                <label for="floatingInput">Website</label><br />
+            </div>
+
+            <label class="form-label" for="customFile">Choose image</label>
+            <input type="file" name="picture" class="form-control" id="customFile" /><br />
+
+
+            <input class="btn btn-primary centre" id="register-submit-button" type="submit" name="submit" value="Register" disabled/>
 
         </form>
-    {% endif %}
+	</div>
+</div>   
+{% endif %}
 {% endblock body_block %}

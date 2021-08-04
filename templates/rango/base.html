@@ -13,7 +13,7 @@
     
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -35,7 +35,10 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand p-2" href="{% url 'rango:index' %}">Rango</a>
+                <a class="navbar-brand p-2" href="{% url 'rango:index' %}">Rango
+                    <img src="/static/images/favicon.ico" width="25" height="25">
+                </a>
+                
                 <button class="navbar-toggler bg-dark" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -48,7 +51,7 @@
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:profile' user %}">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a></li>
                         {% else %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'rango:register' %}">Sign Up</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'rango:register' %}">Register</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:login' %}">Login</a></li>
                         {% endif %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'rango:about' %}">About</a></li>
@@ -64,9 +67,10 @@
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
-                    <div>
+                    <div class="list_of_five">
                         {% block sidebar_block %}
-                        {% get_category_list category %}
+                            <strong>Categories</strong>
+                            {% get_category_list category %}
                         {% endblock %}
                     </div>
                 </div>
@@ -75,9 +79,9 @@
                 {% block body_block %}
                 {% endblock %}
 
-                <footer>
-                    <p class="float-right"><a href="#">Back to top</a></p>
-                    <p>&copy; 2021 Flying Circus &middot; Carl Mellander - 2038584, Liam Fotheringham - 2595981, Reema
+                <footer class="custom-centre">
+                    <p class="float-right"><a href="#" id="back-to-top-button">Back to top</a></p>
+                    <p>&copy; 2021 <strong>The Flying Circus</strong> &middot; Carl Mellander - 2038584, Liam Fotheringham - 2595981, Reema
                         Boualayan - 2592274</p>
                 </footer>
             </main>

@@ -2,62 +2,60 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Homepage
+Homepage
 {% endblock title_block %}
 
 {% block body_block %}
-
-    <div class="jumbotron p-4">
-        <div>
-            <h1 class="jumbotron-heading">Rango says...</h1>
-            <div>
-                <h2 class="h2">
-                    {% if user.is_authenticated %}
-                        howdy {{ user.username }}! <br />
-                    {% else %}
-                        hey there partner! <br />
-                    {% endif %}
-                </h2>
-                <strong>{{ boldmessage }}</strong>  
-            </div>
-        </div>
-    </div>
-
+<div class="jumbotron p-4">
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-6">
-                    <h2>Most Liked Categories</h2>
-                    {% if categories %}
-                    <ul class="list-group">
-                        {% for category in categories %}
-                            <li class="list-group-item"><a href="/rango/category/{{ category.slug }}/">{{category.name}}</a></li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                        <strong>There are no categories present.</strong>
-                    {% endif %}
-                </div>
+        <h1>Welcome to Rango
+            {% if user.is_authenticated %}
+            <td class="text-capitalize">{{ user.username }}!</td><br />
+            {% else %}
+            partner! <br />
+            {% endif %}
+        </h1>
+        <strong>A social link aggregation website!</strong>
+	</div>
+</div>
+<br />
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <h2>Most Liked Categories</h2>
+                {% if categories %}
+                <ul class="list-group">
+                    {% for category in categories %}
+                    <li class="list-group-item"><a href="/rango/category/{{ category.slug }}/">{{category.name}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <strong>There are no categories present.</strong>
+                {% endif %}
             </div>
-            <div class="col-md-6">
-                <div class="card mb-6">
-                    <h2>Most Viewed Pages</h2>
-                    {% if pages %}
-                        <ul class="list-group">
-                        
-                            {% for page in pages %}
-                                <li class="list-group-item"><a href="{{page.url}}">{{page.title}}</a></li>
-                            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <h2>Most Viewed Pages</h2>
+                {% if pages %}
+                <ul class="list-group">
 
-                        </ul>
-                    {% else %}
-                        <strong>There are no pages present.</strong>
-                    {% endif %}
-                </div>
+                    {% for page in pages %}
+                    <li class="list-group-item"><a href="{{page.url}}">{{page.title}}</a></li>
+                    {% endfor %}
+
+                </ul>
+                {% else %}
+                <strong>There are no pages present.</strong>
+                {% endif %}
             </div>
         </div>
     </div>
-    
+</div>
+
 {% endblock %}
 
 </html>

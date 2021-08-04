@@ -2,19 +2,26 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    About Rango
+About
 {% endblock title_block %}
 
 {% block body_block %}
-    <h1>Rango says...</h1>
-    <div>
-        here is the about page. <br>
-        <p>Visits: {{ visits }}</p>
-        <strong> This tutorial has been put together by Liam Fotheringham.</strong>
-    
+<div class="jumbotron p-4">
+    <div class="container custom-inline">
+        <h1>This is the about page!</h1>
     </div>
-    <div>
-        <img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" /><br />
-        <img src="{{ MEDIA_URL }}cat.jpg" alt="Picture of a Cat" /><br />
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <h2>What is Rango?</h2><br />
+            Rango is a social media link aggregation website!<br />
+        </div>
+        <div class="col-md-5">
+            <h2>Our Goals:</h2><br />
+            Our objectives in creating this website are to foster an information sharing community,
+            encourage user engagement, and facilitate discussions on a wide variety of topics.
+        </div>
     </div>
+</div>
 {% endblock %}
