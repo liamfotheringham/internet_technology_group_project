@@ -331,5 +331,6 @@ def search(request):
         query_name = request.GET.get('name', None)
         if query_name:
             results = Category.objects.filter(name__contains=query_name)
-            return render(request, 'rango/search.html', {"results":results})
+            results_inverted = Category.objects.filter(name__contains=query_name).order_by('-date_added')
+            return render(request, 'rango/search.html', {"results":results, "results_inverted":results_inverted})
     return render(request, 'rango/search.html')

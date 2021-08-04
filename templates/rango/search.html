@@ -29,7 +29,8 @@ Search
                     <li class="list-group-item">
                         <h2><strong><a href="{% url 'rango:show_category' result.slug %}">{{ result.name }}</a></strong></h2>
                         <br />
-                        <h4>Likes {{ result.likes }} - Views {{ result.views }}</h4>
+                        <h4>Added {{ result.date_added.day }}/{{ result.date_added.month }}/{{ result.date_added.year }} 
+                        - Likes {{ result.likes }} - Views {{ result.views }}</h4>
                     </li>
                     {% endfor %}
                 </ul>

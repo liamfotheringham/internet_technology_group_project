@@ -47,9 +47,9 @@ def populate():
     other_pages_comments = [{'text':'There are so many approaches to Web Development!', 'username':'Willem', 'date_added':datetime(2021,4,22,3,21,8)}
     ]
 
-    cats = {'Python':{'pages':python_pages, 'comments':python_comments, 'views':128,'likes':64},
-            'Django':{'pages':django_pages, 'comments':django_comments, 'views':64,'likes':32},
-            'Other Frameworks':{'pages':other_pages, 'comments':other_pages_comments, 'views':32,'likes':16}
+    cats = {'Python':{'pages':python_pages, 'comments':python_comments, 'views':128,'likes':64, 'date_added':datetime(2021,3,26)},
+            'Django':{'pages':django_pages, 'comments':django_comments, 'views':64,'likes':32, 'date_added':datetime(2021,4,21)},
+            'Other Frameworks':{'pages':other_pages, 'comments':other_pages_comments, 'views':32,'likes':16, 'date_added':datetime(2021,5,21)}
             }
 
     for user in users:

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import default_if_none, slugify
 from datetime import datetime
 
 class Category(models.Model):
@@ -11,6 +11,7 @@ class Category(models.Model):
     likes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
     slug = models.SlugField(unique=True)
+    date_added = models.DateTimeField(default=datetime.now, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
