@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from rango.models import Comment, UserProfile, User, Category, Friend
+from rango.models import Comment, UserProfile, User, Category, Friend, LikedCat
 
 class CommentMethodTests(TestCase):
 
@@ -69,8 +69,6 @@ class ProfileViewTests(TestCase):
 
         response = self.client.get(reverse('rango:profile', kwargs={'username': user_one.username}))
 
-        print(response)
-
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "johndoe")
         self.assertContains(response, "janedoe")
@@ -90,6 +88,41 @@ class ProfileViewTests(TestCase):
         
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No Friends")
+
+    def test_if_likes_display_on_profile_page(self):
+        '''
+        If userprofile has likes, display likes on profile page
+        '''
+
+        user_one = add_user("johndoe", "John", "Doe")
+        userprofile = add_user_profile(user_one)
+        category_one = add_category("Test One")
+        category_two = add_category("Test Two")
+
+        like_one = add_like(userprofile, category_one)
+        like_two = add_like(userprofile, category_two)
+
+        response = self.client.get(reverse('rango:profile', kwargs={'username': user_one.username}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "johndoe")
+        self.assertContains(response, "Test One")
+        self.assertContains(response, "Test Two")
+
+
+    def test_if_no_likes_display_on_profile_page(self):
+        '''
+        If userprofile has no likes, display "No Liked categories"
+        '''
+
+        user_one = add_user("johndoe", "John", "Doe")
+        userprofile = add_user_profile(user_one)
+
+        response = self.client.get(reverse('rango:profile', kwargs={'username': user_one.username}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "johndoe")
+        self.assertContains(response, "No Liked categories")
 
 def add_user(username="johndoe", firstname="John", lastname="Doe"):
     user = User.objects.get_or_create(username=username)[0]
@@ -125,3 +158,10 @@ def add_friend(userprofile_current, userprofile_to_add):
     friend.save()
 
     return friend
+
+def add_like(userprofile, category):
+    liked_cat = LikedCat.objects.get_or_create(user_profile=userprofile)[0]
+    liked_cat.likedcats.add(category)
+    liked_cat.save()
+
+    return liked_cat
