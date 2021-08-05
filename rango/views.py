@@ -330,7 +330,14 @@ def search(request):
     if request.method == "GET":
         query_name = request.GET.get('name', None)
         if query_name:
-            results = Category.objects.filter(name__contains=query_name)
-            results_inverted = Category.objects.filter(name__contains=query_name).order_by('-date_added')
-            return render(request, 'rango/search.html', {"results":results, "results_inverted":results_inverted})
+            results = Category.objects.filter(name__contains=query_name).order_by('-date_added')
+            if 'searchLatest' in request.GET:
+                results_latest = results
+                return render(request, 'rango/search.html', {"results_latest":results_latest})
+            elif 'searchEarliest' in request.GET:
+                results_earliest = results.order_by('date_added')
+                return render(request, 'rango/search.html', {"results_earliest":results_earliest})
+            else:
+                return render(request, 'rango/search.html', {"results":results})
+            return render(request, 'rango/search.html', {"results":results})
     return render(request, 'rango/search.html')
