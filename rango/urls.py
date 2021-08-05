@@ -16,4 +16,5 @@ urlpatterns = [
     path('profile/<username>/friendslist/', views.friends_list , name='friends_list'),
     path('check_username/', views.check_username, name='check_username'),
     path('search/', views.search, name='search'),
+    path('profile/<username>/liked_categories/', views.likedcat_list , name='liked_categories')
 ]

@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.views import View
 
-from rango.models import Category, Page, Comment, UserProfile, Friend
+from rango.models import Category, Page, Comment, UserProfile, Friend, LikedCat
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm, CommentForm
 
 from datetime import datetime
@@ -37,6 +37,24 @@ def about(request):
 
     return render(request, 'rango/about.html', context=context_dict)
 
+def update_liked_cats(request, user_profile, category_name_slug):
+
+        if 'like_category' in request.POST:
+            cat = LikedCat.objects.get_or_create(user_profile=user_profile)[0]
+            category = Category.objects.get(slug=category_name_slug)
+            category.likes = category.likes + 1
+            category.save()
+            cat.likedcats.add(category)
+            cat.save()
+
+        elif 'unlike_category' in request.POST:
+            cat = LikedCat.objects.get_or_create(user_profile=user_profile)[0]
+            category = Category.objects.get(slug=category_name_slug)
+            category.likes = category.likes - 1
+            category.save()
+            cat.likedcats.remove(category)
+            cat.save()
+
 def show_category(request, category_name_slug):
 
     context_dict = {}
@@ -51,7 +69,25 @@ def show_category(request, category_name_slug):
             comment.save()
         else:
             form = CommentForm()
-        
+
+    is_liked = False
+    
+    if request.user.is_authenticated:
+        update_liked_cats(request, request.user.userprofile, category_name_slug)
+
+        all_likedcats = get_all_likedcats(request.user.userprofile)
+
+        try:        
+            category = Category.objects.get(slug=category_name_slug)
+
+            if (all_likedcats != None):
+                
+                if(category in all_likedcats):
+                    is_liked = True
+
+        except Category.DoesNotExist:
+            is_liked = False
+
     try:
         category = Category.objects.get(slug=category_name_slug)
         pages = Page.objects.filter(category=category)
@@ -61,13 +97,15 @@ def show_category(request, category_name_slug):
         context_dict['category'] = category
         context_dict['comments'] = Comment.objects.filter(category = category).order_by('-date_added')
         context_dict['comment_form'] = form
+        context_dict['is_liked'] = is_liked
 
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
         context_dict['comments'] = None
         context_dict['comment_form'] = None
-
+        context_dict['is_liked'] = None
+    
     return render(request, 'rango/category.html', context=context_dict)
 
 @login_required
@@ -226,8 +264,7 @@ class ProfileView(View):
 
             user_profile_friends = Friend.objects.get_or_create(user_profile=user_profile)[0]
             user_profile_friends.friends.add(session_user_profile)
-
-
+    
     def get(self, request, username):
         try:
             (user, user_profile, form) = self.get_user_details(username)
@@ -236,10 +273,11 @@ class ProfileView(View):
             return redirect(reverse('rango:index'))
 
         friends = get_five_friends(user_profile)
+        likedcats = get_five_likedcats(user_profile)
 
         if request.user.is_authenticated:
             all_session_friends = get_all_friends(request.user.userprofile)
-            
+
             if(all_session_friends and user_profile in all_session_friends):
                 is_friend = True
             else:
@@ -252,7 +290,8 @@ class ProfileView(View):
                         'selected_user':user,
                         'form':form,
                         'friends':friends,
-                        'is_friend':is_friend}
+                        'is_friend':is_friend,
+                        'likedcats': likedcats }
         
         return render(request, 'rango/profile.html', context_dict)
     
@@ -275,14 +314,33 @@ class ProfileView(View):
             print(form.errors)
 
         friends = get_five_friends(user_profile)
+        likedcats = get_five_likedcats(user_profile)
 
         context_dict = {'user_profile':user_profile,
                         'selected_user':user,
                         'form':form,
-                        'friends':friends}
+                        'friends':friends,
+                        'likedcats': likedcats}
 
         return render(request, 'rango/profile.html', context_dict)
 
+def search(request):
+    """ search function """
+    if request.method == "GET":
+        query_name = request.GET.get('name', None)
+        if query_name:
+            results = Category.objects.filter(name__contains=query_name).order_by('-date_added')
+            if 'searchLatest' in request.GET:
+                results_latest = results
+                return render(request, 'rango/search.html', {"results_latest":results_latest})
+            elif 'searchEarliest' in request.GET:
+                results_earliest = results.order_by('date_added')
+                return render(request, 'rango/search.html', {"results_earliest":results_earliest})
+            else:
+                return render(request, 'rango/search.html', {"results":results})
+            return render(request, 'rango/search.html', {"results":results})
+    return render(request, 'rango/search.html')
+    
 def friends_list(request, username):
     context_dict = {}
     context_dict['username'] = username
@@ -311,6 +369,37 @@ def get_all_friends(user_profile):
     except Friend.DoesNotExist:
         return None
 
+# get 5 of the categories liked by user
+def get_five_likedcats(user_profile):
+    try:
+        likedcat = LikedCat.objects.get(user_profile=user_profile)
+        return likedcat.likedcats.all()[:5]
+    
+    except LikedCat.DoesNotExist:
+        return None
+
+# get all categories liked by user
+def get_all_likedcats(user_profile):
+    try:
+        likedcat = LikedCat.objects.get(user_profile=user_profile)
+        return likedcat.likedcats.all()
+    
+    except LikedCat.DoesNotExist:
+        return None
+
+# display liked categories in a list   
+def likedcat_list(request, username):
+    context_dict = {}
+    context_dict['username'] = username
+
+    try:
+        user = User.objects.get_or_create(username=username)[0]
+        context_dict['likedcats'] = get_all_likedcats(user.userprofile)
+    except:
+        return redirect(reverse('rango:index'))
+    
+    return render(request, 'rango/liked_categories.html', context_dict)
+
 def check_username(request):
     if 'username' in request.GET:
         username = request.GET['username']
@@ -325,19 +414,3 @@ def check_username(request):
 
     return render(request, 'rango/username_exists.html', {'username_exists': username_exists})
 
-def search(request):
-    """ search function """
-    if request.method == "GET":
-        query_name = request.GET.get('name', None)
-        if query_name:
-            results = Category.objects.filter(name__contains=query_name).order_by('-date_added')
-            if 'searchLatest' in request.GET:
-                results_latest = results
-                return render(request, 'rango/search.html', {"results_latest":results_latest})
-            elif 'searchEarliest' in request.GET:
-                results_earliest = results.order_by('date_added')
-                return render(request, 'rango/search.html', {"results_earliest":results_earliest})
-            else:
-                return render(request, 'rango/search.html', {"results":results})
-            return render(request, 'rango/search.html', {"results":results})
-    return render(request, 'rango/search.html')

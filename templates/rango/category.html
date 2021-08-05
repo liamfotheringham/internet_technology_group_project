@@ -15,9 +15,23 @@ Unknown Category
     <div class="container custom-inline">
         <h1>{{ category.name }}</h1>
     </div>
-    <div class="container custom-inline">
-        <h6>Date added: {{ category.date_added }}</h6>
-    </div>
+</div>
+<div class="container custom-inline">
+    <strong id="like_count">{{ category.likes }} likes</strong>
+    {% if request.user.is_authenticated %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% if is_liked == True %}
+        <input class="btn btn-primary" name="unlike_category" type="submit" value="Unlike Category">
+        {% else %}
+        <input class="btn btn-primary" name="like_category" type="submit" value="Like Category">
+        {% endif %}
+    </form>
+    {% endif %}
+</div>
+
+<div class="container custom-inline">
+    <h6>Date added: {{ category.date_added }}</h6>
 </div>
 
 <div class="container">
@@ -66,7 +80,8 @@ Unknown Category
                     </div>
                     <div class="col-md-10">
                         <div class="card-body">
-                            <h4 class="card-title">{{ comment.user }}</h4>
+                            <h4 class="card-title"><a
+                                    href="{% url 'rango:profile' comment.user.username %}">{{ comment.user }}</a></h4>
                             <p class="card-text">{{ comment.text }}</p>
                         </div>
                     </div>
