@@ -28,7 +28,7 @@ Homepage
                 {% if categories %}
                 <ul class="list-group">
                     {% for category in categories %}
-                    <li class="list-group-item"><a href="/rango/category/{{ category.slug }}/">{{category.name}}</a>
+                    <li class="list-group-item"><a href="{% url 'rango:show_category' category.slug%}">{{category.name}}</a>
                     </li>
                     {% endfor %}
                 </ul>
